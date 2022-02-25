@@ -5,9 +5,6 @@ import IconSort from '../icon/IconSort';
 import Filter from '../filter/filter';
 
 
-//
-//       {props.musicDataset.songs.map(item => (
-// const Table = (props) => {
 const Table = ({ sortTable, currentString, sortDirection, onSearchSend }) => {
 
     const [keyInfo, setKeyInfo] = useState('')

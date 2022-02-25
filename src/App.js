@@ -4,12 +4,10 @@ import Table from './music_table/table';
 import Pagination from './pagination/pagination';
 
 
-// import * as musicDataset from './music.json';
-
 
 function App() {
 
-    const baseUrl = 'http://davidpots.com/jakeworry/017%20JSON%20Grouping,%20part%203/data.json';
+    const baseUrl = 'https://davidpots.com/jakeworry/017%20JSON%20Grouping,%20part%203/data.json';
 
     const [tableData, setTableData] = useState([]);
     const [sortDirection, setSortDirection] = useState(true);
@@ -26,7 +24,7 @@ function App() {
             return tableData
         }
         return tableData.filter(el => {
-            return el['title'].toLowerCase().includes(searchText.toLowerCase())
+            return el['title'].toLowerCase().includes(searchText.toLowerCase()) || el['artist'].toLowerCase().includes(searchText.toLowerCase()) || el['year'].toLowerCase().includes(searchText.toLowerCase())
         })
     }
     const filtredData = getFiltredData();
@@ -34,10 +32,6 @@ function App() {
     const lastString = currentPageNumber * countItems;
     const firstString = lastString - countItems;
     const currentString = filtredData.slice(firstString, lastString);
-
-
-
-
 
     const currentPage = (pg) => {
         setCurrentPageNumber(pg)
@@ -62,10 +56,8 @@ function App() {
 
     }
 
-
-
     useEffect(() => {
-        axios.get(baseUrl)
+        axios(baseUrl)
             .then((res) => {
                 setTableData(res.data.songs)
                 setTotalRows(filtredData.length);
@@ -85,7 +77,6 @@ function App() {
         setSearchText(value)
     }
     const sortTable = (key) => {
-        // console.log(key);
         const copyTable = tableData.concat();
         let sortedTable;
         if (sortDirection) {
