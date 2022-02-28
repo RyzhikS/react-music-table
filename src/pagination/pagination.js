@@ -2,8 +2,8 @@ import React from "react";
 
 const Pagination = ({ paginationRow, currentPage, onNextPress, onPrevPress, buttonActive, currentPageNumber }) => {
     return (
-        <nav aria-label="Page navigation example">
-            <ul className="pagination">
+        <nav aria-label="Page navigation">
+            <ul className="pagination" style={{ justifyContent: "center" }}>
                 <li className="page-item">
                     <a className="page-link" href="#" aria-label="Previous" onClick={() => { onPrevPress() }} >
 

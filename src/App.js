@@ -15,28 +15,39 @@ function App() {
     const [totalPages, setTotalPages] = useState(0);
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [buttonActive, setButtonActive] = useState('page-item');
-    const [searchText, setSearchText] = useState('');
+    const [artistFilter, setArtistFilter] = useState('');
 
+    const [searchText, setSearchText] = useState('');
     const countItems = 8;
 
-    const getFiltredData = () => {
-        if (!searchText) {
-            return tableData
-        }
+    const getFiltredByArtist = () => {
         return tableData.filter(el => {
+            return el['artist'].includes(artistFilter)
+        })
+    }
+    const filtredData = getFiltredByArtist();
+
+    const getSearchedData = () => {
+        if (!searchText) {
+            return filtredData
+        }
+        return filtredData.filter(el => {
             return el['title'].toLowerCase().includes(searchText.toLowerCase()) || el['artist'].toLowerCase().includes(searchText.toLowerCase()) || el['year'].toLowerCase().includes(searchText.toLowerCase())
         })
     }
-    const filtredData = getFiltredData();
+    const searchedData = getSearchedData();
 
     const lastString = currentPageNumber * countItems;
     const firstString = lastString - countItems;
-    const currentString = filtredData.slice(firstString, lastString);
+    const currentString = searchedData.slice(firstString, lastString);
 
-    const currentPage = (pg) => {
-        setCurrentPageNumber(pg)
+
+
+    const currentPage = (p) => {
+        setCurrentPageNumber(p)
         setButtonActive('active')
     }
+
 
     const onNextPress = () => {
         if (currentPageNumber > totalPages - 1) {
@@ -60,12 +71,12 @@ function App() {
         axios(baseUrl)
             .then((res) => {
                 setTableData(res.data.songs)
-                setTotalRows(filtredData.length);
+                setTotalRows(searchedData.length);
                 const getTotalPages = totalRows / countItems;
                 setTotalPages(getTotalPages);
-
+                currentPage(1)
             })
-    }, [setTotalRows, setTotalPages, filtredData.length, totalRows])
+    }, [setTotalRows, setTotalPages, searchedData.length, totalRows])
 
     let paginationRow = [];
 
@@ -75,6 +86,12 @@ function App() {
 
     const onSearchSend = (value) => {
         setSearchText(value)
+    }
+
+
+    const byArtistFilter = (val) => {
+        console.log(val);
+        setArtistFilter(val)
     }
     const sortTable = (key) => {
         const copyTable = tableData.concat();
@@ -88,11 +105,11 @@ function App() {
         setSortDirection(!sortDirection)
     }
 
+
     return (
         <div className="container">
-            <Table currentString={currentString} sortTable={sortTable} sortDirection={sortDirection} onSearchSend={onSearchSend} />
+            <Table currentString={currentString} sortTable={sortTable} sortDirection={sortDirection} byArtistFilter={byArtistFilter} tableData={tableData} onSearchSend={onSearchSend} />
             <Pagination paginationRow={paginationRow} currentPage={currentPage} onNextPress={onNextPress} onPrevPress={onPrevPress} buttonActive={buttonActive} currentPageNumber={currentPageNumber} />
-
         </div >
     );
 }
