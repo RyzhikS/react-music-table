@@ -2,20 +2,25 @@ import React, { useState } from "react";
 
 const FilterArtist = ({ byArtistFilter, tableData }) => {
     const [searchValue, setSearchValue] = useState('')
+    function getUniqueArtists(arr) {
+        let result = [];
+        arr.forEach(el => result.push(el.artist))
+        return result;
+    }
+
+    const uniqueArtistsSet = new Set(getUniqueArtists(tableData));
+    const uniqueArtists = [...uniqueArtistsSet]
 
     const handleClick = (e) => {
-        console.log(e.target.value);
         setSearchValue(e.target.value);
-        console.log(searchValue);
-
     }
 
     return (
         <div className='filter-wrapper'>
             <select className='filter-select' onChange={handleClick}>
                 <option></option>
-                {tableData.map(item => (
-                    <option value={item.artist} onChange={byArtistFilter(searchValue)} key={item.title}>{item.artist}</option>
+                {uniqueArtists.map(item => (
+                    <option value={item} onChange={byArtistFilter(searchValue)} key={item}>{item}</option>
                 ))}
             </select>
         </div>

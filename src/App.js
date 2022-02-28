@@ -88,9 +88,7 @@ function App() {
         setSearchText(value)
     }
 
-
     const byArtistFilter = (val) => {
-        console.log(val);
         setArtistFilter(val)
     }
     const sortTable = (key) => {
